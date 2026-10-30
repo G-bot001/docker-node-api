@@ -6,7 +6,7 @@ app.get('/', (req, res) => {
   res.json({ message: 'Hello! Docker is awesome!', time: new Date().toISOString() });
 });
 
-app.get('/health', (req, res) => {
+app.get('/healthy', (req, res) => {
   res.json({ status: 'ok' });
 });
 
