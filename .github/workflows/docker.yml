@@ -1,0 +1,29 @@
+name: Docker CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t node-api:${{ github.sha }} .
+
+      - name: Run container
+        run: docker run -d -p 3000:3000 --name api node-api:${{ github.sha }}
+
+      - name: Smoke test
+        run: |
+          sleep 3
+          curl --fail http://localhost:3000/health
+
+      - name: Show container logs on failure
+        if: failure()
+        run: docker logs api
